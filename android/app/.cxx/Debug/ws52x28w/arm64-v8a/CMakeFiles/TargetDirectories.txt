@@ -1,0 +1,6 @@
+/Users/manish/Desktop/Project/teenpatti/android/app/.cxx/Debug/ws52x28w/arm64-v8a/CMakeFiles/appmodules.dir
+/Users/manish/Desktop/Project/teenpatti/android/app/.cxx/Debug/ws52x28w/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/manish/Desktop/Project/teenpatti/android/app/.cxx/Debug/ws52x28w/arm64-v8a/CMakeFiles/rebuild_cache.dir
+/Users/manish/Desktop/Project/teenpatti/android/app/.cxx/Debug/ws52x28w/arm64-v8a/safeareacontext_autolinked_build/CMakeFiles/react_codegen_safeareacontext.dir
+/Users/manish/Desktop/Project/teenpatti/android/app/.cxx/Debug/ws52x28w/arm64-v8a/safeareacontext_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/manish/Desktop/Project/teenpatti/android/app/.cxx/Debug/ws52x28w/arm64-v8a/safeareacontext_autolinked_build/CMakeFiles/rebuild_cache.dir

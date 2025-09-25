@@ -1,0 +1,1 @@
+/Users/manish/Desktop/Project/teenpatti/android/app/build/intermediates/cxx/Debug/ws52x28w/obj/arm64-v8a
