@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "lint": "eslint .",
-    "start": "react-native start",
-    "test": "jest"
+    "ios": "npx react-native run-ios",
+    "android": "npx react-native run-android",
+    "pods": "npx pod-install",
+    "start": "npx react-native start",
+    "clean:ios": "cd ios && xcodebuild -workspace *.xcworkspace -scheme * -configuration Debug clean || true",
+    "clean:android": "cd android && ./gradlew clean || true"
   },
   "dependencies": {
     "react": "19.1.0",
