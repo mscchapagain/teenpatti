@@ -10,6 +10,7 @@ import React from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import RootNavigator from './src/navigation/RootNavigator';
 import { AuthProvider } from './src/auth/AuthContext';
+import { RealtimeProvider } from './src/realtime/RealtimeProvider';
 
 const theme = { ...DefaultTheme, colors: { ...DefaultTheme.colors, background: '#0b0f14' } };
 
@@ -17,7 +18,9 @@ export default function App() {
   return (
     <NavigationContainer theme={theme}>
       <AuthProvider>
-        <RootNavigator />
+        <RealtimeProvider>
+          <RootNavigator />
+        </RealtimeProvider>
       </AuthProvider>
     </NavigationContainer>
   );
