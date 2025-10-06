@@ -1,9 +1,9 @@
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-// @ts-expect-error - custom type declarations for ws are provided in src/@types
+
 import { WebSocketServer, WebSocket } from 'ws';
-// @ts-expect-error - custom type declarations for ws are provided in src/@types
+
 import type { RawData } from 'ws';
 import { TableManager } from './tables';
 
@@ -53,8 +53,8 @@ type ClientMessage =
 
 type Session = {
   id: string;
-  displayName?: string;
-  tableId?: string;
+  displayName?: string | undefined;
+  tableId?: string | undefined;
 };
 
 const sessions = new Map<WebSocket, Session>();
@@ -137,7 +137,8 @@ function joinTable(ws: WebSocket, tableId: string, displayName?: string) {
     leaveTable(ws, { silent: true });
   }
 
-  session.displayName = displayName?.trim() || session.displayName || `Player ${session.id.slice(-4)}`;
+  session.displayName =
+    displayName?.trim() || session.displayName || `Player ${session.id.slice(-4)}`;
 
   try {
     tables.seat(tableId, session.id, session.displayName);

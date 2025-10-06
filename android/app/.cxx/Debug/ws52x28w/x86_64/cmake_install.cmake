@@ -44,7 +44,10 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
+  include("/Users/manish/Desktop/Project/teenpatti/android/app/.cxx/Debug/ws52x28w/x86_64/rnasyncstorage_autolinked_build/cmake_install.cmake")
+  include("/Users/manish/Desktop/Project/teenpatti/android/app/.cxx/Debug/ws52x28w/x86_64/rngesturehandler_codegen_autolinked_build/cmake_install.cmake")
   include("/Users/manish/Desktop/Project/teenpatti/android/app/.cxx/Debug/ws52x28w/x86_64/safeareacontext_autolinked_build/cmake_install.cmake")
+  include("/Users/manish/Desktop/Project/teenpatti/android/app/.cxx/Debug/ws52x28w/x86_64/rnscreens_autolinked_build/cmake_install.cmake")
 
 endif()
 
