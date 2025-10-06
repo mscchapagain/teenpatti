@@ -1,10 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/RootNavigator';
+import type { TabsParamList } from '../navigation/MainTabs';
 import { useRealtime, type TableSummary } from '../realtime/RealtimeProvider';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'MainTabs'>;
+type Props = CompositeScreenProps<
+  BottomTabScreenProps<TabsParamList, 'Lobby'>,
+  NativeStackScreenProps<RootStackParamList, 'MainTabs'>
+>;
 
 export default function LobbyScreen({ navigation }: Props) {
   const { status, send, subscribe } = useRealtime();
@@ -66,7 +72,7 @@ export default function LobbyScreen({ navigation }: Props) {
           >
             <Text style={s.cardTitle}>Table {item.id.toUpperCase()}</Text>
             <Text style={s.cardSub}>
-              Min bet: {item.minBet} • Players: {item.players}/6
+              Min bet: {item.minBet} • Players: {item.players}/{item.maxPlayers}
             </Text>
           </Pressable>
         )}

@@ -10,23 +10,55 @@ import React, {
 } from 'react';
 import { Platform } from 'react-native';
 
-export type TableSummary = { id: string; minBet: number; players: number };
+export type TableSummary = {
+  id: string;
+  minBet: number;
+  maxPlayers: number;
+  players: number;
+};
+
+export type TableSeat = {
+  pos: number;
+  userId: string | null;
+  displayName: string | null;
+  ready: boolean;
+  seen: boolean;
+  totalBet: number;
+  inHand: boolean;
+};
+
+export type TableState = {
+  id: string;
+  minBet: number;
+  maxPlayers: number;
+  players: number;
+  dealerPos: number | null;
+  turnPos: number | null;
+  stake: number;
+  pot: number;
+  seats: TableSeat[];
+  phase: 'WAITING' | 'COLLECT_BOOT' | 'DEAL' | 'BETTING' | 'SHOWDOWN' | 'WINNER';
+};
 
 export type ServerMessage =
   | { type: 'lobby:data'; tables: TableSummary[] }
   | { type: 'table:system'; tableId: string; message: string }
+  | { type: 'table:state'; table: TableState }
+  | { type: 'session:info'; id: string }
   | { type: 'error'; message: string };
 
 export type ClientMessage =
   | { type: 'lobby:subscribe' }
   | { type: 'lobby:unsubscribe' }
   | { type: 'table:join'; tableId: string; displayName?: string }
-  | { type: 'table:leave'; tableId: string };
+  | { type: 'table:leave'; tableId: string }
+  | { type: 'table:ready'; tableId: string; ready: boolean };
 
 type RealtimeStatus = 'connecting' | 'open' | 'closed';
 
 type RealtimeContextValue = {
   status: RealtimeStatus;
+  sessionId: string | null;
   send: (message: ClientMessage) => void;
   subscribe: <T extends ServerMessage['type']>(
     type: T,
@@ -36,6 +68,7 @@ type RealtimeContextValue = {
 
 const DEFAULT_VALUE: RealtimeContextValue = {
   status: 'closed',
+  sessionId: null,
   send: () => {},
   subscribe: () => () => {},
 };
@@ -48,9 +81,12 @@ const SERVER_URL = Platform.select({
 
 const RealtimeContext = createContext<RealtimeContextValue>(DEFAULT_VALUE);
 
+type NativeSocket = InstanceType<typeof globalThis.WebSocket> & { ping?: () => void };
+
 export function RealtimeProvider({ children }: PropsWithChildren) {
   const [status, setStatus] = useState<RealtimeStatus>('connecting');
-  const socketRef = useRef<WebSocket | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const socketRef = useRef<NativeSocket | null>(null);
   const listenersRef = useRef<
     Map<ServerMessage['type'], Set<(payload: ServerMessage) => void>>
   >(new Map());
@@ -75,9 +111,10 @@ export function RealtimeProvider({ children }: PropsWithChildren) {
     const resolvedUrl = SERVER_URL ?? 'ws://localhost:4000';
 
     function connect() {
+      closingRef.current = false;
       clearTimer();
       setStatus('connecting');
-      const socket = new globalThis.WebSocket(resolvedUrl);
+      const socket = new globalThis.WebSocket(resolvedUrl) as NativeSocket;
       socketRef.current = socket;
 
       socket.onopen = () => {
@@ -87,6 +124,7 @@ export function RealtimeProvider({ children }: PropsWithChildren) {
 
       socket.onclose = () => {
         socketRef.current = null;
+        setSessionId(null);
         if (closingRef.current) return;
         setStatus('closed');
         reconnectAttempts.current += 1;
@@ -109,6 +147,10 @@ export function RealtimeProvider({ children }: PropsWithChildren) {
 
         if (!data || typeof data !== 'object' || !('type' in data)) {
           return;
+        }
+
+        if ((data as ServerMessage).type === 'session:info') {
+          setSessionId((data as Extract<ServerMessage, { type: 'session:info' }>).id);
         }
 
         const handlers = listenersRef.current.get((data as ServerMessage).type);
@@ -154,8 +196,8 @@ export function RealtimeProvider({ children }: PropsWithChildren) {
   }, []);
 
   const value = useMemo<RealtimeContextValue>(
-    () => ({ status, send, subscribe }),
-    [send, status, subscribe],
+    () => ({ status, sessionId, send, subscribe }),
+    [send, sessionId, status, subscribe],
   );
 
   return <RealtimeContext.Provider value={value}>{children}</RealtimeContext.Provider>;
