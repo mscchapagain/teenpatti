@@ -4,6 +4,17 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
+## Realtime development server
+
+The mobile lobby and table views now connect to a lightweight Node.js WebSocket service that tracks mock tables and broadcasts join/leave messages. Run it alongside Metro with:
+
+```sh
+cd server
+npm run dev
+```
+
+The client expects the server on `ws://localhost:4000` (or `ws://10.0.2.2:4000` for Android emulators). When both the app and server are running you'll see live table counts in the lobby and realtime join/leave activity inside each table screen.
+
 ## Step 1: Start Metro
 
 First, you will need to run **Metro**, the JavaScript build tool for React Native.
